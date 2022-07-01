@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void createWebSocketClient(String userId){
 //        websocket要修改
-        URI uri = URI.create("ws://172.25.204.62:8082/websocket/"+userId);
+        URI uri = URI.create("ws://121.196.194.255:1883/websocket/"+userId);
         client = new JWebSocketClient(uri){
             @Override
             public void onOpen(ServerHandshake handshakedata) {
