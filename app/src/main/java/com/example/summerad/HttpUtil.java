@@ -84,10 +84,11 @@ public class HttpUtil {
                 case SUCCESS:
 
                     String response = msg.getData().getString("data");
-                    List<Program> programList = JSON.parseArray(response, Program.class);
-                    for (Program program:programList) {
-                        Toast.makeText(AppContext, "ID="+program.getProgramImg()+"Name="+program.getProgramName(), Toast.LENGTH_LONG).show();
-                    }
+                    System.out.println(response);
+                    Object object = JSON.parse(response);
+                    System.out.println(object);
+                    Toast.makeText(AppContext, object.toString(), Toast.LENGTH_LONG).show();
+
                     break;
                 case FAIL:
                     Toast.makeText(AppContext, msg.getData().getString("error"),Toast.LENGTH_LONG).show();
