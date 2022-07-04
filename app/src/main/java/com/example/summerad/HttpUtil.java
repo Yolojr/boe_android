@@ -1,10 +1,13 @@
 package com.example.summerad;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +27,8 @@ public class HttpUtil {
     private static Context AppContext;
     private static List<PubNotice> pubNoticeList;
     private static int flag=0;
-
+    private ImageView imageview;
+    private TextView textView;
     public static List<PubNotice> msg(int f){
         if(f==1){
             flag=1;
@@ -87,14 +91,13 @@ public class HttpUtil {
 
     @SuppressLint("HandlerLeak")
     public static Handler handler = new Handler() {
-
+        private Context mContext;
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
                     String response = msg.getData().getString("data");
                     pubNoticeList = JSON.parseArray(response, PubNotice.class);
-                    msg(1);
                     System.out.println("succes: "+pubNoticeList);
                     break;
                 case FAIL:

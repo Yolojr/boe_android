@@ -1,126 +1,83 @@
 package com.example.summerad;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.summerad.Client.JWebSocketClient;
+import com.example.summerad.Client.WebClient;
 
-import org.java_websocket.handshake.ServerHandshake;
 
-import java.net.URI;
-import java.util.Date;
-import java.util.logging.ErrorManager;
+public class MainActivity extends Activity {
 
-public class MainActivity extends AppCompatActivity {
-    HttpUtil httpUtil = null;
+//    private Button btn
+    private ImageView imageview;
+//    Handler h = null;
 
+//    private Code currentCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        httpUtil.GetRequest(getApplicationContext(),"http://10.0.2.2:8081/pub-notice");
 
-//        while(true){
-//            try {
-//                Thread.sleep(1000);
-//                System.out.println(httpUtil.msg(0));
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        //调用webClient
+        WebClient.initWebSocket(this,10086);
     }
-//    private TextView showMessage;
-////    private EditText editText;
-//    private JWebSocketClient client;
-//    private StringBuilder sb = new StringBuilder();
-//    private ErrorManager XToastUtils;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//    }
-//
-//    private void createWebSocketClient(String userId){
-////        websocket要修改
-//        URI uri = URI.create("ws://121.196.194.255:1883/websocket/"+userId);
-//        client = new JWebSocketClient(uri){
-//            @Override
-//            public void onOpen(ServerHandshake handshakedata) {
-//                super.onOpen(handshakedata);
-//                sb.append("onOpen at time：");
-//                sb.append(new Date());
-//                sb.append("服务器状态：");
-//                sb.append(handshakedata.getHttpStatusMessage());
-//                sb.append("\n");
-//                showMessage.setText(sb.toString());
-//            }
-//
-//            @Override
-//            public void onMessage(String message) {
-//                super.onMessage(message);
-//                Message handlerMessage = Message.obtain();
-//                handlerMessage.obj = message;
-//                handler.sendMessage(handlerMessage);
-//            }
-//
-//            @Override
-//            public void onClose(int code, String reason, boolean remote) {
-//                super.onClose(code, reason, remote);
-//                sb.append("onClose at time：");
-//                sb.append(new Date());
-//                sb.append("\n");
-//                sb.append("onClose info:");
-//                sb.append(code);
-//                sb.append(reason);
-//                sb.append(remote);
-//                sb.append("\n");
-//                showMessage.setText(sb.toString());
-//            }
-//
-//            @Override
-//            public void onError(Exception ex) {
-//                super.onError(ex);
-//                sb.append("onError at time：");
-//                sb.append(new Date());
-//                sb.append("\n");
-//                sb.append(ex);
-//                sb.append("\n");
-//                showMessage.setText(sb.toString());
-//            }
-//        };
-//        try {
-//            client.connectBlocking();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//            XToastUtils.error( "error",e,0);
-//        }
-//
-//    }
-//
-//
-//    private Handler handler = new Handler(new Handler.Callback() {
-//        @Override
-//        public boolean handleMessage(Message msg) {
-//            sb.append("服务器返回数据：");
-//            sb.append(msg.obj.toString());
-//            sb.append("\n");
-//            showMessage.setText(sb.toString());
-//            return true;
-//        }
-//    });
-////
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        client .close();
-//    }
+
+
+
+    public void changePic(String picUrl){
+        imageview = (ImageView) this.findViewById(R.id.imageView);
+            try {
+            Bitmap bitmap = getBitmap(picUrl);
+            imageview.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    public Bitmap getBitmap(String path) throws IOException {
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setRequestMethod("GET");
+            if (conn.getResponseCode() == 200) {
+                InputStream inputStream = conn.getInputStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
