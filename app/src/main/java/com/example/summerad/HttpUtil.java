@@ -8,10 +8,8 @@ import android.os.Message;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,7 +22,16 @@ public class HttpUtil {
     private final static int SUCCESS = 1;
     private final static int FAIL = 0;
     private static Context AppContext;
+    private static List<PubNotice> pubNoticeList;
+    private static int flag=0;
 
+    public static List<PubNotice> msg(int f){
+        if(f==1){
+            flag=1;
+            return null;
+        }
+        return pubNoticeList;
+    }
     public static void GetRequest(Context context, String url){
         AppContext = context;
         Thread thread = new Thread(){
@@ -85,14 +92,10 @@ public class HttpUtil {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-
                     String response = msg.getData().getString("data");
-                    System.out.println(response);
-//                    Object object = JSON.parse(response);
-//                    System.out.println(object);
-//                    Toast.makeText(AppContext, object.toString(), Toast.LENGTH_LONG).show();
-                    List<PubNotice> userList = JSON.parseArray(response, PubNotice.class);
-                    System.out.println(userList);
+                    pubNoticeList = JSON.parseArray(response, PubNotice.class);
+                    msg(1);
+                    System.out.println("succes: "+pubNoticeList);
                     break;
                 case FAIL:
                     Toast.makeText(AppContext, msg.getData().getString("error"),Toast.LENGTH_LONG).show();
