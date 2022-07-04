@@ -25,6 +25,42 @@ public class Program {
 
     private String programSize;
 
+    public void setProgramId(Integer programId) {
+        this.programId = programId;
+    }
+
+    public void setProgramImg(String programImg) {
+        this.programImg = programImg;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    public void setResolvingPower(String resolvingPower) {
+        this.resolvingPower = resolvingPower;
+    }
+
+    public void setProgramTime(String programTime) {
+        this.programTime = programTime;
+    }
+
+    public void setProgramSize(String programSize) {
+        this.programSize = programSize;
+    }
+
+    public void setProgramState(Integer programState) {
+        this.programState = programState;
+    }
+
+    public void setProgramAuthor(String programAuthor) {
+        this.programAuthor = programAuthor;
+    }
+
+    public void setProgramUpdate(LocalDateTime programUpdate) {
+        this.programUpdate = programUpdate;
+    }
+
     private Integer programState;
 
     private String programAuthor;

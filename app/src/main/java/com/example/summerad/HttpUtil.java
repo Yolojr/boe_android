@@ -8,7 +8,10 @@ import android.os.Message;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -85,10 +88,11 @@ public class HttpUtil {
 
                     String response = msg.getData().getString("data");
                     System.out.println(response);
-                    Object object = JSON.parse(response);
-                    System.out.println(object);
-                    Toast.makeText(AppContext, object.toString(), Toast.LENGTH_LONG).show();
-
+//                    Object object = JSON.parse(response);
+//                    System.out.println(object);
+//                    Toast.makeText(AppContext, object.toString(), Toast.LENGTH_LONG).show();
+                    List<PubNotice> userList = JSON.parseArray(response, PubNotice.class);
+                    System.out.println(userList);
                     break;
                 case FAIL:
                     Toast.makeText(AppContext, msg.getData().getString("error"),Toast.LENGTH_LONG).show();

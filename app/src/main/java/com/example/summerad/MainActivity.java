@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        HttpUtil.GetRequest(getApplicationContext(),"http://10.0.2.2:8081/program");
+        HttpUtil.GetRequest(getApplicationContext(),"http://10.0.2.2:8081/pub-notice");
 
     }
 //    private TextView showMessage;
