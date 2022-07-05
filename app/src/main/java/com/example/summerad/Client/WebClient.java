@@ -61,8 +61,17 @@ public class WebClient extends WebSocketClient{
     @Override
     public void onMessage(String message) {
         showLog("onMessage->"+message);
+        if(message.substring(0,1).equals("0")){
+            try {
+                program(message.substring(1));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(message.substring(0,1).equals("1")){
+            notice(message.substring(1));
+        }
 
-        networkRequest();
     }
 
     @Override
@@ -95,7 +104,7 @@ public class WebClient extends WebSocketClient{
             }
         }).start();
     }
-    private void networkRequest(){
+    private void networkRequest(String msg){
 
         String  url1 = "http://10.0.2.2:8081/pub-notice";
         String  url2 = "http://10.0.2.2:8081/pub-program";
@@ -103,7 +112,8 @@ public class WebClient extends WebSocketClient{
         HttpURLConnection connection=null;
 
         try {
-            URL url = new URL(url2);
+            URL url = null;
+            url = new URL(url1);
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
@@ -141,8 +151,9 @@ public class WebClient extends WebSocketClient{
     //公告
     private void notice(String result){
 
-        List<PubNotice> pubNoticeList = JSON.parseArray(result, PubNotice.class);
-        PubNotice pubNotice = pubNoticeList.get(3);
+//        List<PubNotice> pubNoticeList = JSON.parseArray(result, PubNotice.class);
+
+        PubNotice pubNotice = JSON.parseObject(result, PubNotice.class);
 
         textView = (TextView) ((Activity)this.mContext).findViewById(R.id.textView);
 
@@ -160,12 +171,12 @@ public class WebClient extends WebSocketClient{
     //节目
     private void program(String result) throws IOException {
 
-        List<Program> programs = JSON.parseArray(result, Program.class);
-        Program program = programs.get(0);
+//        List<Program> programs = JSON.parseArray(result, Program.class);
+//        Program program = programs.get(0);
 //        System.out.println(program.getPubProgramImg());
         imageview = (ImageView) ((Activity)this.mContext).findViewById(R.id.imageView);
 
-        String  path =  "http://10.0.2.2" + program.getPubProgramImg().substring(16);
+        String  path =  "http://10.0.2.2" + result.substring(16);
         System.out.println(path);
         Bitmap bitmap = getBitmap(path);
 
