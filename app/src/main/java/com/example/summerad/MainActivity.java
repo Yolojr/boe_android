@@ -1,6 +1,5 @@
 package com.example.summerad;
 
-//import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import java.io.IOException;
@@ -32,17 +31,13 @@ import com.example.summerad.Client.WebClient;
 
 public class MainActivity extends Activity {
 
-//    private Button btn
-    private ImageView imageview;
-//    Handler h = null;
 
-//    private Code currentCode;
+    private ImageView imageview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         //调用webClient
         WebClient.initWebSocket(this,10086);

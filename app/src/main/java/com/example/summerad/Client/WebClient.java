@@ -61,7 +61,7 @@ public class WebClient extends WebSocketClient{
     @Override
     public void onMessage(String message) {
         showLog("onMessage->"+message);
-         networkRequest();
+        networkRequest();
     }
 
     @Override
@@ -125,43 +125,51 @@ public class WebClient extends WebSocketClient{
 //            Program program = new Program();
 //            program.setProgramImg(res.get("programImg").toString());
 
-            List<PubNotice> pubNoticeList = JSON.parseArray(result, PubNotice.class);
-            PubNotice pubNotice = pubNoticeList.get(3);
+            notice(result);
 
 
 
-            textView = (TextView) ((Activity)this.mContext).findViewById(R.id.textView);
-            imageview = (ImageView) ((Activity)this.mContext).findViewById(R.id.imageView);
-
-
-            Bitmap bitmap = getBitmap("http://10.0.2.2:8081/img/2022-06-181/148dceed-6c1b-49d1-9d3b-f4e68832cf4e.jpg");
-
-            //图片
-            ((Activity)this.mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    imageview.setImageBitmap(bitmap);
-
-                }
-            });
-            //公告
-            ((Activity)this.mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textView.setText(pubNotice.getPubNoticeContent());
-                }
-            });
-
-
-            if (result == null) {
-                Log.d("Fail", "失败了");
-            }else{
-                Log.d("succuss", result);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    //公告
+    private void notice(String result){
+
+        List<PubNotice> pubNoticeList = JSON.parseArray(result, PubNotice.class);
+        PubNotice pubNotice = pubNoticeList.get(3);
+
+        textView = (TextView) ((Activity)this.mContext).findViewById(R.id.textView);
+
+        ((Activity)this.mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setTextSize(pubNotice.getPubNoticeTextsize());
+//                textView.setTextColor(pubNotice.getPubNoticeTextcolor());
+                textView.setText(pubNotice.getPubNoticeContent());
+            }
+        });
+
+    }
+
+    //节目
+    private void program(String result) throws IOException {
+
+        imageview = (ImageView) ((Activity)this.mContext).findViewById(R.id.imageView);
+        Bitmap bitmap = getBitmap("http://10.0.2.2:8081/img/2022-06-181/148dceed-6c1b-49d1-9d3b-f4e68832cf4e.jpg");
+
+        //图片
+        ((Activity)this.mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imageview.setImageBitmap(bitmap);
+
+            }
+        });
+
+    }
+
     private String getStringByStream(InputStream inputStream){
         Reader reader;
         try {
