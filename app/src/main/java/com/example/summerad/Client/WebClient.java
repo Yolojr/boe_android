@@ -61,6 +61,7 @@ public class WebClient extends WebSocketClient{
     @Override
     public void onMessage(String message) {
         showLog("onMessage->"+message);
+
         networkRequest();
     }
 
@@ -97,10 +98,12 @@ public class WebClient extends WebSocketClient{
     private void networkRequest(){
 
         String  url1 = "http://10.0.2.2:8081/pub-notice";
+        String  url2 = "http://10.0.2.2:8081/pub-program";
+
         HttpURLConnection connection=null;
 
         try {
-            URL url = new URL(url1);
+            URL url = new URL(url2);
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
@@ -125,7 +128,8 @@ public class WebClient extends WebSocketClient{
 //            Program program = new Program();
 //            program.setProgramImg(res.get("programImg").toString());
 
-            notice(result);
+//            notice(result);
+             program(result);
 
 
 
@@ -156,8 +160,14 @@ public class WebClient extends WebSocketClient{
     //节目
     private void program(String result) throws IOException {
 
+        List<Program> programs = JSON.parseArray(result, Program.class);
+        Program program = programs.get(0);
+//        System.out.println(program.getPubProgramImg());
         imageview = (ImageView) ((Activity)this.mContext).findViewById(R.id.imageView);
-        Bitmap bitmap = getBitmap("http://10.0.2.2:8081/img/2022-06-181/148dceed-6c1b-49d1-9d3b-f4e68832cf4e.jpg");
+
+        String  path =  "http://10.0.2.2" + program.getPubProgramImg().substring(16);
+        System.out.println(path);
+        Bitmap bitmap = getBitmap(path);
 
         //图片
         ((Activity)this.mContext).runOnUiThread(new Runnable() {
