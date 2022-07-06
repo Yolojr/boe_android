@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,49 +108,6 @@ public class WebClient extends WebSocketClient{
             }
         }).start();
     }
-    private void networkRequest(String msg){
-
-        String  url1 = "http://10.0.2.2:8081/pub-notice";
-        String  url2 = "http://10.0.2.2:8081/pub-program";
-
-        HttpURLConnection connection=null;
-
-        try {
-            URL url = null;
-            url = new URL(url1);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
-
-            //设置请求方式 GET / POST 一定要大小
-            connection.setRequestMethod("GET");
-            connection.setDoInput(true);
-            connection.setDoOutput(false);
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code" + responseCode);
-            }
-
-            String result = getStringByStream(connection.getInputStream());
-
-            System.out.println(result);
-
-//            JSONObject res = new JSONObject(result);
-
-//            Program program = new Program();
-//            program.setProgramImg(res.get("programImg").toString());
-
-//            notice(result);
-             program(result);
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     //公告
     private void notice(String result){
@@ -161,8 +122,10 @@ public class WebClient extends WebSocketClient{
             @Override
             public void run() {
                 textView.setTextSize(pubNotice.getPubNoticeTextsize());
-//                textView.setTextColor(pubNotice.getPubNoticeTextcolor());
+                textView.setTextColor(Color.parseColor( pubNotice.getPubNoticeTextcolor()));
                 textView.setText(pubNotice.getPubNoticeContent());
+                textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+//                textView.setLeftTopRightBottom(0,100,0,0);
             }
         });
 
